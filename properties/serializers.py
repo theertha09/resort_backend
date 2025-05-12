@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import FormData, FormDataImages,WelcomeSection,whychoose, SubscriptionBenefit, SubscriptionPlan, Payment
+from .models import FormData, FormDataImages,WelcomeSection,whychoose
 
 class FormDataImagesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,7 +16,16 @@ class FormDataSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FormData
-        fields = ['id', 'logo', 'title', 'image', 'description', 'multiple_images', 'multiple_images_upload']
+        fields = [
+            'id',
+            'logo',
+            'title',
+            'image',
+            'description',
+            'type',                    # ✅ Include the 'type' field
+            'multiple_images',
+            'multiple_images_upload'
+        ]
 
     def create(self, validated_data):
         multiple_images = validated_data.pop('multiple_images_upload', [])
@@ -24,7 +33,6 @@ class FormDataSerializer(serializers.ModelSerializer):
         for image in multiple_images:
             FormDataImages.objects.create(form_data=form_data, image=image)
         return form_data
-
 
 class WelcomeSectionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,24 +64,3 @@ class WelcomeSectionSerializer(serializers.ModelSerializer):
         model = WelcomeSection
         fields = '__all__'
 
-class SubscriptionBenefitSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SubscriptionBenefit
-        fields = ['id', 'plan', 'benefit_text']
-
-class SubscriptionPlanSerializer(serializers.ModelSerializer):
-    benefits = SubscriptionBenefitSerializer(many=True, read_only=True)
-    
-    class Meta:
-        model = SubscriptionPlan
-        fields = ['id', 'name', 'original_price', 'offer_price', 'description', 
-                 'is_popular', 'limited_offer', 'benefits']
-
-class PaymentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Payment
-        fields = ['id', 'user_uuid', 'resort', 'subscription_plan', 'amount', 
-                 'razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
-                 'status', 'created_at', 'updated_at']
-        read_only_fields = ['razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
-                          'status', 'created_at', 'updated_at']

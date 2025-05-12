@@ -1,15 +1,16 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 from .views import (
     FormDataListCreateAPIView,
-    FormDataRetrieveUpdateDestroyAPIView,welcometaListCreateAPIView,welcomeRetrieveUpdateDestroyAPIView,FormDataFullDetailAPIView,whychooseRetrieveUpdateDestroyAPIView,whychooseListCreateAPIView,
+    FormDataRetrieveUpdateDestroyAPIView,
+    welcometaListCreateAPIView,
+    welcomeRetrieveUpdateDestroyAPIView,
+    FormDataFullDetailAPIView,
+    whychooseRetrieveUpdateDestroyAPIView,
+    whychooseListCreateAPIView,
     UploadMultipleImagesAPIView,
-    PaymentViewSet,
-    verify_payment
-)
 
-router = DefaultRouter()
-router.register(r'payments', PaymentViewSet)
+    
+)
 
 urlpatterns = [
     path('form-data/', FormDataListCreateAPIView.as_view(), name='formdata-list-create'),
@@ -20,7 +21,4 @@ urlpatterns = [
     path('whychoose/', whychooseListCreateAPIView.as_view(), name='whychoose-list-create'),
     path('whychoose/<int:id>/', whychooseRetrieveUpdateDestroyAPIView.as_view(), name='whychoose-retrieve-update-destroy'),
     path('form-data/<uuid:id>/details/', FormDataFullDetailAPIView.as_view(), name='formdata-full-details'),
-    path('', include(router.urls)),
-    path('verify-payment/', verify_payment, name='verify-payment'),
 ]
-

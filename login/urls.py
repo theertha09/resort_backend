@@ -5,6 +5,6 @@ from .views import (
 )
 
 urlpatterns = [
-    path('forms/', FormListCreateAPIView.as_view(), name='form-list-create'),
-    path('forms/<uuid:uuid>/', FormRetrieveUpdateDestroyAPIView.as_view(), name='form-detail'),
+    path('register/', FormListCreateAPIView.as_view(), name='form-list-create'),
+    path('register/<uuid:uuid>/', FormRetrieveUpdateDestroyAPIView.as_view(), name='form-detail'),
 ]

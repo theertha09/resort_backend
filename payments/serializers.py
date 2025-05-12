@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import SubscriptionPlan, SubscriptionBenefit
+from .models import SubscriptionPlan, SubscriptionBenefit,Payment
+from .models import  SubscriptionBenefit, SubscriptionPlan, Payment
 
 class SubscriptionBenefitSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,7 +13,7 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubscriptionPlan
         fields = [
-            'id', 'name', 'original_price', 'offer_price', 'description',
+            'id', 'name', 'amount', 'description',
             'is_popular', 'limited_offer', 'benefits'
         ]
 
@@ -46,3 +47,12 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
                 SubscriptionBenefit.objects.create(plan=instance, **benefit_data)
         
         return instance
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ['id', 'user_uuid', 'resort', 'subscription_plan', 'amount', 
+                 'razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
+                 'status', 'created_at', 'updated_at']
+        read_only_fields = ['razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
+                          'status', 'created_at', 'updated_at']

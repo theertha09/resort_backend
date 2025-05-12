@@ -168,4 +168,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 RAZORPAY_KEY_ID = 'rzp_test_Mou46QHhq1Bzws'
 
-RAZORPAY_KEY_SECRET = 'rzp_test_Mou46QHhq1Bzws'
+RAZORPAY_KEY_SECRET = 'ztHRAFLjdmu2A0mBsuZtZvb3'
