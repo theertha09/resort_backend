@@ -25,4 +25,6 @@ urlpatterns = [
     path('api/', include('phone.urls')),  # Include phone app URLs
     path('api/', include('product.urls')),  # Include phone app URLs
     path('api/', include('properties.urls')),
+    path('api/', include('payments.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

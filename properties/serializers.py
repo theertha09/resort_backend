@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import FormData, FormDataImages,WelcomeSection,whychoose
+from .models import FormData, FormDataImages,WelcomeSection,whychoose, SubscriptionBenefit, SubscriptionPlan, Payment
 
 class FormDataImagesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -55,3 +55,25 @@ class WelcomeSectionSerializer(serializers.ModelSerializer):
     class Meta:
         model = WelcomeSection
         fields = '__all__'
+
+class SubscriptionBenefitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubscriptionBenefit
+        fields = ['id', 'plan', 'benefit_text']
+
+class SubscriptionPlanSerializer(serializers.ModelSerializer):
+    benefits = SubscriptionBenefitSerializer(many=True, read_only=True)
+    
+    class Meta:
+        model = SubscriptionPlan
+        fields = ['id', 'name', 'original_price', 'offer_price', 'description', 
+                 'is_popular', 'limited_offer', 'benefits']
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ['id', 'user_uuid', 'resort', 'subscription_plan', 'amount', 
+                 'razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
+                 'status', 'created_at', 'updated_at']
+        read_only_fields = ['razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
+                          'status', 'created_at', 'updated_at']
