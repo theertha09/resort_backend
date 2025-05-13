@@ -92,7 +92,7 @@ class CreateOrderAPIView(APIView):
                 subscription_plan=subscription_plan,
                 amount=final_price,
                 resort=resort,
-                status='paid'  # Initially, status is unpaid
+                status='unpaid'  # Initially, status is unpaid
             )
 
             # Step 7: Create Razorpay order
