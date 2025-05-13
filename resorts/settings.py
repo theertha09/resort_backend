@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'phone',
     'product',
     'payments',
+    'dashboard',
     'properties',
 ]
 

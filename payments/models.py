@@ -17,6 +17,7 @@ class SubscriptionPlan(models.Model):
     description = models.TextField()
     is_popular = models.BooleanField(default=False)
     limited_offer = models.BooleanField(default=False)
+    referral_limit = models.IntegerField(null=True, blank=True)  # Null means unlimited
 
     def __str__(self):
         return self.name.capitalize()
@@ -30,6 +31,8 @@ class SubscriptionBenefit(models.Model):
 
 class Payment(models.Model):
     PAYMENT_STATUS_CHOICES = (
+        ('unpaid', 'Unpaid'),
+        ('paid', 'Paid'),
         ('pending', 'Pending'),
         ('completed', 'Completed'),
         ('failed', 'Failed'),
@@ -42,7 +45,7 @@ class Payment(models.Model):
     razorpay_order_id = models.CharField(max_length=255, null=True, blank=True)
     razorpay_payment_id = models.CharField(max_length=255, null=True, blank=True)
     razorpay_signature = models.CharField(max_length=255, null=True, blank=True)
-    status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='pending')
+    status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='paid')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
