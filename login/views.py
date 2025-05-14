@@ -22,6 +22,5 @@ class FormListCreateAPIView(generics.ListCreateAPIView):
 class FormRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = form.objects.all()
     serializer_class = FormSerializer
-    lookup_field = 'uuid'  # Use UUID as lookup field
-    permission_classes = [AllowAny]  # Allow access without authentication
-
+    lookup_field = 'uuid'
+    permission_classes = [AllowAny]
