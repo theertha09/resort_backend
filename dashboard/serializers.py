@@ -1,19 +1,8 @@
 from rest_framework import serializers
-from .models import address, Referral
+from .models import Referral
 from login.models import form
 from rest_framework import serializers
 
-class UserDetailsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = form
-        fields = ['user_uuid', 'full_name', 'email', 'phone_number', 'gender']
-
-class addressSerializer(serializers.ModelSerializer):
-    user = UserDetailsSerializer(read_only=True)
-
-    class Meta:
-        model = address
-        fields = ['id', 'user', 'address']
 
 
 class BulkReferralSerializer(serializers.ModelSerializer):

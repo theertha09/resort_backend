@@ -14,6 +14,7 @@ class Resort(models.Model):
     image = models.ImageField(upload_to='resorts/')
     state = models.ForeignKey(State, on_delete=models.CASCADE, related_name='resorts')
     description = models.TextField(blank=True, null=True)
+    firebase_user_id = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
