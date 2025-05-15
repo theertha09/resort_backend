@@ -1,10 +1,15 @@
-# resorts/urls.py
-
 from django.urls import path
-from .views import StateListAPIView, ResortListAPIView, ResortDetailAPIView
+from .views import (
+    StateListCreateAPIView, StateRetrieveUpdateDestroyAPIView,
+    ResortListCreateAPIView, ResortRetrieveUpdateDestroyAPIView,
+)
 
 urlpatterns = [
-    path('states/', StateListAPIView.as_view(), name='state-list'),
-    path('resorts/', ResortListAPIView.as_view(), name='resort-list'),
-    path('resorts/<uuid:id>/', ResortDetailAPIView.as_view(), name='resort-detail'),
+    # State APIs
+    path('place/', StateListCreateAPIView.as_view(), name='state-list-create'),
+    path('place/<int:id>/', StateRetrieveUpdateDestroyAPIView.as_view(), name='state-detail'),
+
+    # Resort APIs
+    path('resorts/', ResortListCreateAPIView.as_view(), name='resort-list-create'),
+    path('resorts/<int:id>/', ResortRetrieveUpdateDestroyAPIView.as_view(), name='resort-detail'),
 ]
