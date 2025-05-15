@@ -55,8 +55,12 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
 class PaymentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
-        fields = ['id', 'user_uuid', 'resort', 'subscription_plan', 'amount', 
-                 'razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
-                 'status', 'created_at', 'updated_at','payment_method','payment_status'],    
-        read_only_fields = ['razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
-                          'status', 'created_at', 'updated_at']
+        fields = [
+            'id', 'user_uuid', 'subscription_plan', 'amount', 
+            'razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
+            'status', 'created_at', 'updated_at', 'payment_method', 'payment_status'
+        ]
+        read_only_fields = [
+            'razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
+            'status', 'created_at', 'updated_at'
+        ]

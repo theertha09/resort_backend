@@ -6,7 +6,6 @@ from rest_framework.decorators import api_view
 from django.conf import settings
 from login.models import form  # Assuming the form model is in the login app
 import razorpay
-from properties.models import FormData  # Ensure this import is at the top
 import uuid
 from .models import SubscriptionPlan, Payment
 from .serializers import SubscriptionPlanSerializer, PaymentSerializer
@@ -53,14 +52,13 @@ class CreateOrderAPIView(APIView):
 
     def post(self, request):
         try:
-            # Step 1: Get user_uuid, resort_uuid, and subscription_plan_uuid from the request data
+            # Step 1: Get user_uuid and subscription_plan_uuid from the request data
             user_uuid = request.data.get('user_uuid')
-            resort_uuid = request.data.get('resort_uuid')
             subscription_plan_uuid = request.data.get('subscription_plan_uuid')
 
-            # Validate the required fields
-            if not user_uuid or not resort_uuid or not subscription_plan_uuid:
-                return Response({'error': 'user_uuid, resort_uuid, and subscription_plan_uuid are required.'}, status=status.HTTP_400_BAD_REQUEST)
+            if not user_uuid or not subscription_plan_uuid:
+                return Response({'error': 'user_uuid and subscription_plan_uuid are required.'},
+                                status=status.HTTP_400_BAD_REQUEST)
 
             # Step 2: Retrieve the User (form) instance
             try:
@@ -68,38 +66,32 @@ class CreateOrderAPIView(APIView):
             except form.DoesNotExist:
                 return Response({'error': 'User with this user_uuid not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-            # Step 3: Retrieve the Resort (FormData) instance
-            try:
-                resort = FormData.objects.get(id=resort_uuid)
-            except FormData.DoesNotExist:
-                return Response({'error': 'Resort with this resort_uuid not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-            # Step 4: Retrieve the Subscription Plan instance
+            # Step 3: Retrieve the Subscription Plan instance
             try:
                 subscription_plan = SubscriptionPlan.objects.get(id=subscription_plan_uuid)
             except SubscriptionPlan.DoesNotExist:
-                return Response({'error': 'Subscription Plan with this subscription_plan_uuid not found.'}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'error': 'Subscription Plan with this subscription_plan_uuid not found.'},
+                                status=status.HTTP_404_NOT_FOUND)
 
-            # Step 5: Calculate the final price including GST
+            # Step 4: Calculate the final price including GST
             base_price = float(subscription_plan.amount)
-            gst_percentage = 18  # GST rate
+            gst_percentage = 18
             gst_amount = base_price * gst_percentage / 100
             final_price = round(base_price + gst_amount, 2)
 
-            # Step 6: Create a payment record in the database
+            # Step 5: Create a payment record in the database
             payment = Payment.objects.create(
                 user=user,
                 subscription_plan=subscription_plan,
                 amount=final_price,
-                resort=resort,
-                status='unpaid'  # Initially, status is unpaid
+                status='completed',  # Set to 'completed' initially
             )
 
-            # Step 7: Create Razorpay order
+            # Step 6: Create Razorpay order
             order_data = {
-                'amount': int(final_price * 100),  # Razorpay requires the amount in paise (1 INR = 100 paise)
+                'amount': int(final_price * 100),  # Razorpay expects amount in paise
                 'currency': 'INR',
-                'receipt': str(payment.id),  # Store the payment ID in the receipt for reference
+                'receipt': str(payment.id),
                 'notes': {
                     'subscription_plan': str(subscription_plan.id),
                     'plan_type': subscription_plan.name
@@ -108,17 +100,16 @@ class CreateOrderAPIView(APIView):
 
             razorpay_order = client.order.create(data=order_data)
 
-            # Step 8: Save the Razorpay order ID in the payment record
+            # Step 7: Save Razorpay order ID
             payment.razorpay_order_id = razorpay_order['id']
             payment.save()
 
-            # Step 9: Return the order details in the response
             return Response({
                 'order_id': razorpay_order['id'],
-                'amount': final_price,  # Return final price in INR
+                'amount': final_price,
                 'currency': 'INR',
                 'payment_id': str(payment.id),
-                'user_uuid': str(user.uuid),  # Include user_uuid in the response
+                'user_uuid': str(user.uuid),
                 'plan_type': subscription_plan.name,
                 'final_price': final_price,
                 'gst_amount': gst_amount,
@@ -127,7 +118,6 @@ class CreateOrderAPIView(APIView):
             }, status=status.HTTP_201_CREATED)
 
         except Exception as e:
-            # Handle any unexpected errors
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
