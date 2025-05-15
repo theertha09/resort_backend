@@ -1,12 +1,12 @@
-# address/urls.py
-from django.urls import path
-from .views import (
-    AddressListCreateAPIView,
-    AddressRetrieveUpdateDestroyAPIView,
+# # address/urls.py
+# from django.urls import path
+# from .views import (
+#     AddressListCreateAPIView,
+#     AddressRetrieveUpdateDestroyAPIView,
     
-)
+# )
 
-urlpatterns = [
-    path('addresses/', AddressListCreateAPIView.as_view(), name='address-list-create'),
-    path('addresses/<int:pk>/', AddressRetrieveUpdateDestroyAPIView.as_view(), name='address-detail'),
-]
+# urlpatterns = [
+#     path('addresses/', AddressListCreateAPIView.as_view(), name='address-list-create'),
+#     path('addresses/<int:pk>/', AddressRetrieveUpdateDestroyAPIView.as_view(), name='address-detail'),
+# ]

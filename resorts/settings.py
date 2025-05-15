@@ -47,10 +47,9 @@ INSTALLED_APPS = [
     'phone',
     'product',
     'payments',
-    'dashboard',
     'points',
     'properties',
-    'address',
+    'addresses',
 ]
 
 MIDDLEWARE = [

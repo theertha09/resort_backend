@@ -13,6 +13,7 @@ class form(models.Model):  # PascalCase naming
     dob = models.DateField(null=True, blank=True)  # New
     gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')])  # Fixed typo
     password = models.CharField(max_length=255)
+    
 
     def __str__(self):
         return self.full_name
