@@ -84,7 +84,7 @@ class CreateOrderAPIView(APIView):
                 user=user,
                 subscription_plan=subscription_plan,
                 amount=final_price,
-                status='completed',  # Set to 'completed' initially
+                status='unpaid',  # Set to 'completed' initially
             )
 
             # Step 6: Create Razorpay order
