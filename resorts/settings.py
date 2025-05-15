@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'properties',
     'addresses',
     'coins',
+    'rest_framework_simplejwt',
+
 ]
 
 MIDDLEWARE = [
