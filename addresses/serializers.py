@@ -5,11 +5,11 @@ from login.models import form
 class UserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = form
-        fields = ['full_name', 'dob', 'email', 'phone_number', 'gender']
+        fields = ['full_name', 'dob', 'email', 'phone_number', 'gender', 'uuid']
 
 class AddressSerializer(serializers.ModelSerializer):
     user_details = UserDetailsSerializer(source='user', read_only=True)
-    user_uuid = serializers.UUIDField(write_only=True)
+    user_uuid = serializers.UUIDField(write_only=True)  # Used only for POST
 
     class Meta:
         model = Address
