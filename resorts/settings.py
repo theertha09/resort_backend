@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
-    'corsheaders',
     'drf_yasg',
     'login',
     'phone',
@@ -50,12 +49,17 @@ INSTALLED_APPS = [
     'points',
     'properties',
     'addresses',
+    'documentation',
     'coins',
     'rest_framework_simplejwt',
+
+    'corsheaders',
 
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -67,6 +71,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'resorts.urls'
+CORS_ALLOW_ALL_ORIGINS = True  # For development only, configure properly in production
+CORS_ALLOW_CREDENTIALS = True
+
 
 TEMPLATES = [
     {
@@ -95,7 +102,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -163,6 +169,14 @@ SIMPLE_JWT = {
 GOOGLE_CLIENT_ID = 'your-google-client-id'  # Replace with actual client ID
 APPLE_BUNDLE_ID = 'your-apple-bundle-id'    # Replace with actual bundle ID
 APPLE_PUBLIC_KEY = None  # Will be fetched from Apple's servers
+
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:8000",
+    "https://yourfrontenddomain.com",
+]
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True  # For development only, configure properly in production
