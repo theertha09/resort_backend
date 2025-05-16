@@ -8,13 +8,11 @@ class State(models.Model):
         return self.name
 
 class Resort(models.Model):
-    user = models.ForeignKey('login.form', on_delete=models.CASCADE, related_name='resorts')
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
     image = models.ImageField(upload_to='resorts/')
-    state = models.ForeignKey(State, on_delete=models.CASCADE, related_name='resorts')
+    place = models.ForeignKey(State, on_delete=models.CASCADE, related_name='resorts')
     description = models.TextField(blank=True, null=True)
-    firebase_user_id = models.CharField(max_length=255)
-
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     def __str__(self):
         return self.name

@@ -13,4 +13,4 @@ class ResortSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Resort
-        fields = ['id', 'name', 'location', 'image', 'state', 'description']
+        fields = ['id', 'name', 'location', 'image', 'state', 'description','price']
