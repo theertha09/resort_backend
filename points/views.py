@@ -8,3 +8,6 @@ from .serializers import pointsNumberSerializer
 class pointsListCreateAPIView(generics.ListAPIView):
     queryset = points.objects.all()
     serializer_class = pointsNumberSerializer
+class pointsRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = points.objects.all()
+    serializer_class = pointsNumberSerializer
