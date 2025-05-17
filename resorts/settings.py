@@ -52,8 +52,8 @@ INSTALLED_APPS = [
     'documentation',
     'coins',
     'rest_framework_simplejwt',
-
     'corsheaders',
+    'form',
 
 ]
 
