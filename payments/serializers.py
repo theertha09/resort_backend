@@ -1,7 +1,3 @@
-
-
-
-
 from rest_framework import serializers
 from .models import SubscriptionPlan, SubscriptionBenefit,Payment
 from .models import  SubscriptionBenefit, SubscriptionPlan, Payment
@@ -53,14 +49,20 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
         return instance
 
 class PaymentSerializer(serializers.ModelSerializer):
+    user_uuid = serializers.SerializerMethodField()
+
     class Meta:
         model = Payment
         fields = [
             'id', 'user_uuid', 'subscription_plan', 'amount', 
             'razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
-            'status', 'created_at', 'updated_at', 'payment_method', 'payment_status'
+            'status', 'created_at', 'updated_at',
         ]
         read_only_fields = [
             'razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 
             'status', 'created_at', 'updated_at'
         ]
+
+    def get_user_uuid(self, obj):
+        # Assumes obj.user has a uuid field 
+        return str(obj.user.uuid) if obj.user and hasattr(obj.user, 'uuid') else None 
