@@ -14,6 +14,7 @@ class form(models.Model):  # PascalCase naming
     gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')], null=True, blank=True)
     password = models.CharField(max_length=255, null=True, blank=True)
     
+    created_at = models.DateTimeField(auto_now_add=True)  # 👈 Automatically stores the creation timestamp
 
     def __str__(self):
         return self.full_name
