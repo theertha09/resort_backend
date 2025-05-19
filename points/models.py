@@ -1,10 +1,9 @@
 from django.db import models
-from login.models import form  # Consider renaming 'form' to 'Form' for clarity
+from login.models import form  # Assuming your custom user model is 'form'
 
-# Create your models here.
-class points(models.Model):  # Correct PascalCase
-    user = models.ForeignKey(form, on_delete=models.CASCADE, null=True, blank=True)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+class Points(models.Model):  # Model name in PascalCase
+    user = models.ForeignKey(form, on_delete=models.CASCADE)
+    points = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.full_name
+        return str(self.user)  # Adjust if 'form' has 'full_name'

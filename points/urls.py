@@ -1,7 +1,9 @@
+# points/urls.py
 
 from django.urls import path
-from .views import pointsListCreateAPIView,pointsRetrieveUpdateDestroyAPIView
+from .views import PointsListCreateAPIView, PointsRetrieveUpdateDestroyAPIView
+
 urlpatterns = [
-    path('points/', pointsListCreateAPIView.as_view(), name='points-list'),
-    path('points/<int:id>/', pointsRetrieveUpdateDestroyAPIView.as_view(), name='points-detail'),
+    path('points/', PointsListCreateAPIView.as_view(), name='points-list-create'),
+    path('points/<uuid:uuid>/', PointsRetrieveUpdateDestroyAPIView.as_view(), name='points-detail'),
 ]
