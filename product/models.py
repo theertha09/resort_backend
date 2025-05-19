@@ -10,7 +10,7 @@ class State(models.Model):
 class Resort(models.Model):
     name = models.CharField(max_length=255)
     location = models.CharField(max_length=255)
-    image = models.ImageField(upload_to='resorts/')
+    image = models.ImageField(upload_to='resorts/', blank=True, null=True)
     place = models.ForeignKey(State, on_delete=models.CASCADE, related_name='resorts')
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
