@@ -1,8 +1,6 @@
-# points/serializers.py
-
 from rest_framework import serializers
 from .models import Points
-from login.models import form  # assuming your user model is 'form'
+from login.models import form  # Assuming your user model is named 'form'
 
 class PointsNumberSerializer(serializers.ModelSerializer):
     user_uuid = serializers.UUIDField(write_only=True)
@@ -10,10 +8,10 @@ class PointsNumberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Points
-        fields = ['user_uuid', 'points']
+        fields = ['id', 'user_uuid', 'points']
 
     def create(self, validated_data):
-        user_uuid = validated_data.pop('user_uuid', None)
+        user_uuid = validated_data.pop('user_uuid')
         try:
             user = form.objects.get(uuid=user_uuid)
         except form.DoesNotExist:
@@ -24,6 +22,7 @@ class PointsNumberSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         return {
+            'id': instance.id,
             'user_uuid': str(instance.user.uuid),
-            'points': str(instance.points)
+            'points': str(instance.points)  # Ensures decimal is returned as a string
         }

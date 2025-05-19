@@ -14,9 +14,4 @@ class PointsRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Points.objects.all()
     serializer_class = PointsNumberSerializer
     permission_classes = [AllowAny]
-    lookup_field = 'user__uuid'  # lookup by the related user's UUID
-
-    def get_object(self):
-        # Override to get Points object by user's UUID
-        uuid = self.kwargs.get('uuid')
-        return self.queryset.get(user__uuid=uuid)
+    lookup_field = 'pk'  # optional, default is 'pk' (id)
