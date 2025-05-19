@@ -7,6 +7,7 @@ class Referral(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField()
     phone_number = models.CharField(max_length=15)
+    check_box = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name  # Fixed from self.full_name
