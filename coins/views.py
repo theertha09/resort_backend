@@ -15,7 +15,7 @@ def create_referral(request):
         return Response({'error': 'User ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        payment = Payment.objects.filter(user__uuid=user_id, status='completed').latest('created_at')
+        payment = Payment.objects.filter(user__uuid=user_id, status='paid').latest('created_at')
         user = payment.user
         plan = payment.subscription_plan
     except Payment.DoesNotExist:
@@ -63,3 +63,10 @@ def delete_user_referral(request):
 
     referral.delete()
     return Response({'success': 'Referral deleted.'}, status=status.HTTP_200_OK)
+@api_view(['GET'])
+@authentication_classes([])  # You can enable these if needed
+@permission_classes([])
+def list_all_referrals(request):
+    referrals = Referral.objects.all()
+    serializer = ReferralSerializer(referrals, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
