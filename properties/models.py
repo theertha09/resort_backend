@@ -1,21 +1,16 @@
 import uuid
 from django.db import models
 from login.models import form  # Assuming the form model is in the login app
-
+from product.models import Resort
 class FormData(models.Model):
 
-    TYPE_CHOICES = (
-        ('static', 'Static'),
-        ('partner', 'Partner'),
-    )
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     logo = models.ImageField(upload_to='form/logo/')
     title = models.CharField(max_length=255)
     image = models.ImageField(upload_to='form/main_image/')
     description = models.TextField()
-    type = models.CharField(max_length=20, choices=TYPE_CHOICES)  # 👈 Add this
-
+    resort = models.ForeignKey(Resort, on_delete=models.CASCADE, related_name='form_data')
     def __str__(self):
         return f"{self.title} ({self.get_type_display()})"
     

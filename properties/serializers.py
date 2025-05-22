@@ -7,6 +7,8 @@ class FormDataImagesSerializer(serializers.ModelSerializer):
         fields = ['id', 'image']
 
 class FormDataSerializer(serializers.ModelSerializer):
+    resort_name = serializers.CharField(source='resort.name', read_only=True)  # Show resort name
+
     multiple_images = FormDataImagesSerializer(many=True, read_only=True)
     multiple_images_upload = serializers.ListField(
         child=serializers.ImageField(max_length=1000000, allow_empty_file=False, use_url=False),
@@ -22,7 +24,8 @@ class FormDataSerializer(serializers.ModelSerializer):
             'title',
             'image',
             'description',
-            'type',                    # ✅ Include the 'type' field
+            'type',
+            'resort_name',              # ✅ This will display the resort name
             'multiple_images',
             'multiple_images_upload'
         ]
