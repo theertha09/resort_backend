@@ -31,13 +31,11 @@ class WelcomeSection(models.Model):
     title = models.CharField(max_length=200)
     highlight = models.CharField(max_length=100)
     subtitle = models.TextField()
-    image_url = models.URLField()
-
+    image_url = models.ImageField(upload_to='welcome/main_image/')
 class whychoose(models.Model):
     form_data = models.ForeignKey(FormData, on_delete=models.CASCADE, related_name='why_choose_items')
     title = models.CharField(max_length=200)
     description = models.TextField()
-    image_url = models.URLField()
-
+    image_url = models.ImageField(upload_to='whychooses/main_image/')
     def __str__(self):
         return self.title
