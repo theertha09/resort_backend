@@ -12,7 +12,6 @@ from .serializers import SubscriptionPlanSerializer, PaymentSerializer
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 # Ensure you have Razorpay credentials in your settings
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
 
 # Initialize Razorpay client
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
@@ -33,13 +32,12 @@ class SubscriptionPlanListView(generics.ListAPIView):
 
 
 # Get details of a single Subscription Plan
-class SubscriptionPlanDetailView(RetrieveUpdateDestroyAPIView):
-    queryset = SubscriptionPlan.objects.all()
+class SubscriptionPlanDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SubscriptionPlan.objects.prefetch_related('benefits').all()
     serializer_class = SubscriptionPlanSerializer
     lookup_field = 'uuid'
-
-
-# Payment ViewSet (CRUD if needed)
+    lookup_url_kwarg = 'uuid'
+    permission_classes = [AllowAny]# Payment ViewSet (CRUD if needed)
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer

@@ -13,7 +13,7 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubscriptionPlan
         fields = [
-            'id', 'name', 'amount', 'description',
+            'uuid', 'name', 'amount', 'description',
             'is_popular', 'limited_offer', 'benefits','referral_limit',
         ]
 
