@@ -49,14 +49,20 @@ class whychooseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FormDataDetailSerializer(serializers.ModelSerializer):
+    resort_name = serializers.CharField(source='resort.name', read_only=True)
+    resort_location = serializers.CharField(source='resort.location', read_only=True)
+
     form_images = FormDataImagesSerializer(many=True, read_only=True)
     welcome_sections = WelcomeSectionSerializer(many=True, read_only=True)
     why_choose_items = whychooseSerializer(many=True, read_only=True)
+
     class Meta:
         model = FormData
-        fields = ['id', 'logo', 'title', 'image', 'description',
-                  'form_images', 'welcome_sections', 'why_choose_items']
-
+        fields = [
+            'id', 'logo', 'title', 'image', 'description',
+            'resort_name', 'resort_location',  # ✅ Add these fields
+            'form_images', 'welcome_sections', 'why_choose_items',
+        ]
 
 
 class FormDataImagesSerializer(serializers.ModelSerializer):
