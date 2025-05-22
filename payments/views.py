@@ -32,10 +32,10 @@ class SubscriptionPlanListView(generics.ListAPIView):
 
 
 # Get details of a single Subscription Plan
-class SubscriptionPlanDetailView(generics.RetrieveAPIView):
+class SubscriptionPlanDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = SubscriptionPlan.objects.prefetch_related('benefits').all()
     serializer_class = SubscriptionPlanSerializer
-    lookup_field = 'id'
+    lookup_field = 'uuid'  # or 'uuid' if your model uses `uuid`
     permission_classes = [AllowAny]
 
 
