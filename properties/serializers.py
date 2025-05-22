@@ -8,6 +8,7 @@ class FormDataImagesSerializer(serializers.ModelSerializer):
 
 class FormDataSerializer(serializers.ModelSerializer):
     resort_name = serializers.CharField(source='resort.name', read_only=True)
+    resort_location = serializers.CharField(source='resort.location', read_only=True)  # ✅ NEW
 
     multiple_images = FormDataImagesSerializer(many=True, read_only=True)
     multiple_images_upload = serializers.ListField(
@@ -24,8 +25,9 @@ class FormDataSerializer(serializers.ModelSerializer):
             'title',
             'image',
             'description',
-            'resort',           # ✅ keep this if sending resort ID in requests
-            'resort_name',
+            'resort',           # for sending resort ID when creating/updating
+            'resort_name',      # read-only: display resort name
+            'resort_location',  # ✅ read-only: display resort location
             'multiple_images',
             'multiple_images_upload'
         ]
