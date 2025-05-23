@@ -38,3 +38,9 @@ class Resort(models.Model):
 
 
 
+class WhatToExpect(models.Model):
+    resort = models.ForeignKey(Resort, on_delete=models.CASCADE, related_name='what_to_expect')
+    content = models.TextField()
+
+    def __str__(self):
+        return self.content[:50]  # show first 50 chars

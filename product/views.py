@@ -2,6 +2,7 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from .models import Resort, State, Property, Feature
 from .serializers import ResortSerializer, StateSerializer, PropertySerializer, FeatureSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 
 # STATE VIEWS
 class StateListCreateAPIView(generics.ListCreateAPIView):
@@ -62,3 +63,7 @@ class FeatureRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = FeatureSerializer
     authentication_classes = []
     permission_classes = [AllowAny]
+class ResortCreateUpdateView(generics.CreateAPIView, generics.UpdateAPIView):
+    queryset = Resort.objects.all()
+    serializer_class = ResortSerializer
+    parser_classes = [MultiPartParser, FormParser]
