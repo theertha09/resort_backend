@@ -39,3 +39,5 @@ class whychoose(models.Model):
     image_url = models.ImageField(upload_to='whychooses/main_image/')
     def __str__(self):
         return self.title
+
+

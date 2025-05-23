@@ -83,3 +83,6 @@ class FormDataFullDetailAPIView(RetrieveAPIView):
     lookup_field = 'id'
     permission_classes = [AllowAny]
 
+
+
+

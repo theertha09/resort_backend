@@ -1,6 +1,21 @@
 
 from django.db import models
 
+
+
+class Property(models.Model):  # Make sure this exists
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Feature(models.Model):  # Make sure this exists
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
 class State(models.Model):
     name = models.CharField(max_length=100)
 
@@ -15,6 +30,11 @@ class Resort(models.Model):
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     is_featured = models.BooleanField(default=False)
+    properties = models.ManyToManyField('Property', blank=True, related_name='resorts')  # corrected
+    features = models.ManyToManyField('Feature', blank=True, related_name='resorts')    # corrected
+    
     def __str__(self):
         return self.name
+
+
 
