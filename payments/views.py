@@ -117,38 +117,47 @@ class CreateOrderAPIView(APIView):
 
 # Payment verification
 # Verify Razorpay Payment
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def verify_payment(request):
-    payment_id = request.data.get('payment_id')
+class VerifyPaymentAPIView(APIView):
+    permission_classes = [AllowAny]
 
-    if not payment_id:
-        return Response({'error': 'Payment ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
-
-    try:
-        # If using UUIDField, replace id with uuid
-        payment = Payment.objects.get(id=payment_id)
-
-        params_dict = {
-            'razorpay_order_id': request.data.get('razorpay_order_id'),
-            'razorpay_payment_id': request.data.get('razorpay_payment_id'),
-            'razorpay_signature': request.data.get('razorpay_signature')
-        }
-
+    def post(self, request):
         try:
-            client.utility.verify_payment_signature(params_dict)
+            # Extract details from frontend
+            razorpay_order_id = request.data.get('razorpay_order_id')
+            razorpay_payment_id = request.data.get('razorpay_payment_id')
+            razorpay_signature = request.data.get('razorpay_signature')
+
+            if not all([razorpay_order_id, razorpay_payment_id, razorpay_signature]):
+                return Response({'error': 'Missing required Razorpay parameters.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Find payment record by order_id
+            try:
+                payment = Payment.objects.get(razorpay_order_id=razorpay_order_id)
+            except Payment.DoesNotExist:
+                return Response({'error': 'Payment record not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+            # Step 1: Verify signature
+            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+            params_dict = {
+                'razorpay_order_id': razorpay_order_id,
+                'razorpay_payment_id': razorpay_payment_id,
+                'razorpay_signature': razorpay_signature
+            }
+
+            try:
+                client.utility.verify_payment_signature(params_dict)
+            except razorpay.errors.SignatureVerificationError:
+                return Response({'error': 'Signature verification failed.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Step 2: Mark payment as successful
+            payment.razorpay_payment_id = razorpay_payment_id
+            payment.status = 'paid'
+            payment.save()
+
+            return Response({'success': True, 'message': 'Payment verified and updated successfully.'}, status=status.HTTP_200_OK)
+
         except Exception as e:
-            return Response({'error': f"Payment signature verification failed: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
-
-        payment.razorpay_payment_id = params_dict['razorpay_payment_id']
-        payment.razorpay_signature = params_dict['razorpay_signature']
-        payment.status = 'paid'
-        payment.save()
-
-        return Response({'status': 'success'})
-
-    except Payment.DoesNotExist:
-        return Response({'error': 'Payment not found.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @csrf_exempt
