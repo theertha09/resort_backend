@@ -2,16 +2,16 @@ from rest_framework import generics, status, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.decorators import api_view
-from django.conf import settings
-from login.models import form  # Assuming the form model is in the login app
-import razorpay
-import uuid
-from .models import SubscriptionPlan, Payment
-from .serializers import SubscriptionPlanSerializer, PaymentSerializer
-from django.http import JsonResponse
+from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
-# Ensure you have Razorpay credentials in your settings
+from django.http import JsonResponse
+from django.conf import settings
+
+import razorpay
+
+from login.models import form  # Custom user model
+from .models import SubscriptionPlan, Payment
+from .serializers import SubscriptionPlanSerializer, PaymentSerializer# Ensure you have Razorpay credentials in your settings
 
 # Initialize Razorpay client
 client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
@@ -116,7 +116,9 @@ class CreateOrderAPIView(APIView):
 
 
 # Payment verification
+# Verify Razorpay Payment
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def verify_payment(request):
     try:
         payment = Payment.objects.get(id=request.data.get('payment_id'))
@@ -127,16 +129,11 @@ def verify_payment(request):
             'razorpay_signature': request.data.get('razorpay_signature')
         }
 
-        # Verify payment signature
         try:
             client.utility.verify_payment_signature(params_dict)
         except Exception as e:
-            return Response(
-                {'error': f"Payment signature verification failed: {str(e)}"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({'error': f"Payment signature verification failed: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Update payment status if verification passes
         payment.razorpay_payment_id = params_dict['razorpay_payment_id']
         payment.razorpay_signature = params_dict['razorpay_signature']
         payment.status = 'completed'
