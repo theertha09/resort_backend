@@ -120,8 +120,14 @@ class CreateOrderAPIView(APIView):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def verify_payment(request):
+    payment_id = request.data.get('payment_id')
+
+    if not payment_id:
+        return Response({'error': 'Payment ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
     try:
-        payment = Payment.objects.get(id=request.data.get('payment_id'))
+        # If using UUIDField, replace id with uuid
+        payment = Payment.objects.get(id=payment_id)
 
         params_dict = {
             'razorpay_order_id': request.data.get('razorpay_order_id'),
@@ -136,17 +142,13 @@ def verify_payment(request):
 
         payment.razorpay_payment_id = params_dict['razorpay_payment_id']
         payment.razorpay_signature = params_dict['razorpay_signature']
-        payment.status = 'completed'
+        payment.status = 'paid'
         payment.save()
 
         return Response({'status': 'success'})
 
     except Payment.DoesNotExist:
         return Response({'error': 'Payment not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-    except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 @csrf_exempt
