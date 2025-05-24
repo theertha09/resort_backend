@@ -66,23 +66,20 @@ class CreateOrderAPIView(APIView):
 
             # Step 3: Retrieve the Subscription Plan instance
             try:
-                subscription_plan = SubscriptionPlan.objects.get(id=subscription_plan_uuid)
+                subscription_plan = SubscriptionPlan.objects.get(uuid=subscription_plan_uuid)
             except SubscriptionPlan.DoesNotExist:
                 return Response({'error': 'Subscription Plan with this subscription_plan_uuid not found.'},
                                 status=status.HTTP_404_NOT_FOUND)
 
-            # Step 4: Calculate the final price including GST
-            base_price = float(subscription_plan.amount)
-            gst_percentage = 18
-            gst_amount = base_price * gst_percentage / 100
-            final_price = round(base_price + gst_amount, 2)
+            # Step 4: Use the base price directly without GST
+            final_price = float(subscription_plan.amount)
 
             # Step 5: Create a payment record in the database
             payment = Payment.objects.create(
                 user=user,
                 subscription_plan=subscription_plan,
                 amount=final_price,
-                status='unpaid',  # Set to 'completed' initially
+                status='unpaid',
             )
 
             # Step 6: Create Razorpay order
@@ -91,7 +88,7 @@ class CreateOrderAPIView(APIView):
                 'currency': 'INR',
                 'receipt': str(payment.id),
                 'notes': {
-                    'subscription_plan': str(subscription_plan.id),
+                    'subscription_plan': str(subscription_plan.uuid),
                     'plan_type': subscription_plan.name
                 }
             }
@@ -110,9 +107,8 @@ class CreateOrderAPIView(APIView):
                 'user_uuid': str(user.uuid),
                 'plan_type': subscription_plan.name,
                 'final_price': final_price,
-                'gst_amount': gst_amount,
                 'payment_status': payment.status,
-                'base_price': base_price
+                'base_price': final_price
             }, status=status.HTTP_201_CREATED)
 
         except Exception as e:

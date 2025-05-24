@@ -184,6 +184,5 @@ CORS_ALLOW_CREDENTIALS = True
 # Media files configuration
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-RAZORPAY_KEY_ID = 'rzp_test_Mou46QHhq1Bzws'
-
-RAZORPAY_KEY_SECRET = 'ztHRAFLjdmu2A0mBsuZtZvb3'
+RAZORPAY_KEY_ID = 'rzp_live_mGBVJk2oewdxKF'
+RAZORPAY_KEY_SECRET = 'gJ9vHC2rogSpfHNRu02WscDb'
