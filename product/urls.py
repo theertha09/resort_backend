@@ -15,7 +15,7 @@ urlpatterns = [
 
     path('properties/', PropertyListCreateView.as_view(), name='property-list-create'),
     path('properties/<int:pk>/', PropertyRetrieveUpdateDestroyView.as_view(), name='property-detail'),
-    path('feactures/', FeatureListCreateView.as_view(), name='feactures-list-create'),
-    path('feactures/<int:pk>/', FeatureRetrieveUpdateDestroyView.as_view(), name='feactures-detail'),
+    path('features/', FeatureListCreateView.as_view(), name='feactures-list-create'),
+    path('features/<int:pk>/', FeatureRetrieveUpdateDestroyView.as_view(), name='feactures-detail'),
 
 ]
