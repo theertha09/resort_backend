@@ -11,7 +11,6 @@ class Points(models.Model):
     user = models.ForeignKey(form, on_delete=models.CASCADE, related_name='points')
     points = models.DecimalField(max_digits=10, decimal_places=2)
     is_redeemed = models.BooleanField(default=False)
-    total_points = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # ✅ total points field
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')  # ✅ status field
   
     def __str__(self):
