@@ -20,13 +20,10 @@ class PointsNumberSerializer(serializers.ModelSerializer):
         return Points.objects.create(**validated_data)
 
     def to_representation(self, instance):
-        # ✅ Show points only if status is 'pending'
-        display_points = instance.points if instance.status == 'pending' else 0
-
         return {
             'id': instance.id,
             'user_uuid': str(instance.user.uuid),
-            'points': str(display_points),
+            'points': str(instance.points),
             'is_redeemed': instance.is_redeemed,
             'status': instance.status,
         }
