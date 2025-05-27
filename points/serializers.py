@@ -7,7 +7,7 @@ class PointsNumberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Points
-        fields = ['id', 'user_uuid', 'points', 'is_redeemed', 'status','total_points']
+        fields = ['id', 'user_uuid', 'points', 'is_redeemed', 'status']
 
     def create(self, validated_data):
         user_uuid = validated_data.pop('user_uuid')
@@ -25,6 +25,5 @@ class PointsNumberSerializer(serializers.ModelSerializer):
             'user_uuid': str(instance.user.uuid),
             'points': str(instance.points),
             'is_redeemed': instance.is_redeemed,
-            'total_points': str(instance.total_points),
             'status': instance.status,
         }

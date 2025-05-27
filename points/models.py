@@ -12,6 +12,5 @@ class Points(models.Model):
     points = models.DecimalField(max_digits=10, decimal_places=2)
     is_redeemed = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')  # ✅ status field
-    total_points = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     def __str__(self):
         return f"{self.user} - {self.points} points - {self.status}"
