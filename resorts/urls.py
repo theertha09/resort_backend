@@ -55,6 +55,7 @@ urlpatterns = [
     path('api/', include('coins.urls')),
     path('api/', include('form.urls')),  # Include form app URLs
     path('api/', include('partner.urls')),  # Include form app URLs
+    path('api/', include('reservation.urls')),  # Include form app URLs
 
    # Swagger documentation URLs
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='swagger-schema-ui'),
