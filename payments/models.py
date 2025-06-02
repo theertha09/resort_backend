@@ -6,8 +6,8 @@ from django.db import models
 from login.models import form  # Assuming the form model is in the login app
 class SubscriptionPlan(models.Model):
     PLAN_CHOICES = (
-        ('gold', 'Gold'),
-        ('platinum', 'Platinum'),
+        ('Gold', 'Gold'),
+        ('Platinum', 'Platinum'),
     )
 
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

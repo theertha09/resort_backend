@@ -8,6 +8,8 @@ from .views import (
     whychooseRetrieveUpdateDestroyAPIView,
     whychooseListCreateAPIView,
     UploadMultipleImagesAPIView,
+    FormFeatureListCreateAPIView,
+    FormFeatureRetrieveUpdateDestroyAPIView
 
     
 )
@@ -21,4 +23,7 @@ urlpatterns = [
     path('whychoose/', whychooseListCreateAPIView.as_view(), name='whychoose-list-create'),
     path('whychoose/<int:id>/', whychooseRetrieveUpdateDestroyAPIView.as_view(), name='whychoose-retrieve-update-destroy'),
     path('form-data/<uuid:id>/details/', FormDataFullDetailAPIView.as_view(), name='formdata-full-details'),
+    path('authentic/', FormFeatureListCreateAPIView.as_view()),
+    path('authentic/<int:id>/', FormFeatureRetrieveUpdateDestroyAPIView.as_view()),
+
 ]

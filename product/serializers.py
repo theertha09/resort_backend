@@ -45,7 +45,7 @@ class ResortSerializer(serializers.ModelSerializer):
         model = Resort
         fields = ['id', 'name', 'location', 'image', 'place', 'place_id',
                   'description', 'price', 'is_featured',
-                  'features', 'properties', 'what_to_expect',
+                  'features', 'properties', 'what_to_expect','actual_price',
                   'features_ids', 'properties_ids', 'what_to_expect_contents']
 
     def create(self, validated_data):

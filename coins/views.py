@@ -22,7 +22,7 @@ def create_referral(request):
         return Response({'error': 'User has not completed any payment.'}, status=status.HTTP_403_FORBIDDEN)
 
     current_referrals = Referral.objects.filter(user=user).count()
-    if plan.name.lower() == 'gold' and current_referrals >= 10:
+    if plan.name.lower() == 'Gold' and current_referrals >= 10:
         return Response({'error': 'Gold plan allows only 10 referrals.'}, status=status.HTTP_403_FORBIDDEN)
 
     serializer = ReferralSerializer(data=request.data)

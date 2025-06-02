@@ -1,10 +1,17 @@
 from rest_framework import serializers
-from .models import FormData, FormDataImages,WelcomeSection,whychoose
+from .models import FormData, FormDataImages,WelcomeSection,whychoose,FormFeature
 
 class FormDataImagesSerializer(serializers.ModelSerializer):
     class Meta:
         model = FormDataImages
         fields = ['id', 'image']
+
+
+class FormFeatureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FormFeature
+        fields = "__all__"
+
 
 class FormDataSerializer(serializers.ModelSerializer):
     resort_name = serializers.CharField(source='resort.name', read_only=True)
@@ -24,6 +31,7 @@ class FormDataSerializer(serializers.ModelSerializer):
             'logo',
             'title',
             'image',
+            'Luxury',
             'description',
             'resort',           # for sending resort ID when creating/updating
             'resort_name',      # read-only: display resort name
@@ -55,13 +63,16 @@ class FormDataDetailSerializer(serializers.ModelSerializer):
     form_images = FormDataImagesSerializer(many=True, read_only=True)
     welcome_sections = WelcomeSectionSerializer(many=True, read_only=True)
     why_choose_items = whychooseSerializer(many=True, read_only=True)
+    features = FormFeatureSerializer(many=True, read_only=True)
+
 
     class Meta:
         model = FormData
         fields = [
-            'id', 'logo', 'title', 'image', 'description',
+            'id', 'logo', 'title', 'image', 'description','Luxury',
             'resort_name', 'resort_location',  # ✅ Add these fields
-            'form_images', 'welcome_sections', 'why_choose_items',
+            'form_images', 'welcome_sections', 'why_choose_items','features',
+
         ]
 
 

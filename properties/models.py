@@ -6,12 +6,11 @@ class FormData(models.Model):
 
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    logo = models.ImageField(upload_to='form/logo/',blank=True, null=True)
+    logo = models.ImageField(upload_to='form/logo/', blank=True, null=True)
     title = models.CharField(max_length=255)
-    wellness=models.TextField()
+    Luxury = models.TextField()
     image = models.ImageField(upload_to='form/main_image/')
     description = models.TextField()
-
     resort = models.ForeignKey(Resort, on_delete=models.CASCADE, related_name='form_data')
     def __str__(self):
         return f"{self.title} ({self.get_type_display()})"
@@ -43,3 +42,10 @@ class whychoose(models.Model):
         return self.title
 
 
+class FormFeature(models.Model):
+    form_data = models.ForeignKey(FormData, on_delete=models.CASCADE, related_name='features')
+    icon = models.ImageField(upload_to='form/features/icons/')
+    title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.title

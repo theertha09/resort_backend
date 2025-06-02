@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password, make_password,is_password_usable
+from .pagination import FormPagination
 
 from rest_framework.permissions import IsAuthenticated
 
@@ -25,7 +26,7 @@ class FormListCreateAPIView(generics.ListCreateAPIView):
     queryset = Form.objects.all()
     serializer_class = FormSerializer
     permission_classes = [AllowAny]
-
+    pagination_class = FormPagination
 
 # Retrieve, Update, Delete form entry by UUID
 class FormRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):

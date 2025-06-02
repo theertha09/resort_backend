@@ -11,8 +11,8 @@ from django.conf import settings
 import hmac
 import hashlib
 
-from .models import FormData, FormDataImages,WelcomeSection,whychoose
-from .serializers import FormDataSerializer,WelcomeSectionSerializer,whychooseSerializer,FormDataDetailSerializer
+from .models import FormData, FormDataImages,WelcomeSection,whychoose,  FormFeature
+from .serializers import FormDataSerializer,WelcomeSectionSerializer,whychooseSerializer,FormDataDetailSerializer, FormFeatureSerializer, FormDataImagesSerializer
 
 # Create and List FormData
 class FormDataListCreateAPIView(generics.ListCreateAPIView):
@@ -84,5 +84,16 @@ class FormDataFullDetailAPIView(RetrieveAPIView):
     permission_classes = [AllowAny]
 
 
+class FormFeatureListCreateAPIView(generics.ListCreateAPIView):
+    queryset = FormFeature.objects.all()
+    serializer_class = FormFeatureSerializer
+    permission_classes = [AllowAny]
+
+
+class FormFeatureRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = FormFeature.objects.all()
+    serializer_class = FormFeatureSerializer
+    lookup_field = 'id'
+    permission_classes = [AllowAny]
 
 
