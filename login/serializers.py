@@ -6,15 +6,27 @@ from rest_framework import serializers
 from .models import form as Form
 
 class FormSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=False)  # password is write-only, no read
+    password = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = Form
         fields = ['uuid', 'full_name', 'email', 'phone_number', 'dob', 'gender', 'password', 'created_at']
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
 
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password:
+            instance.set_password(password)  # This hashes the password
+        instance.save()
+        return instance
+
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password:
+            instance.set_password(password)
+        instance.save()
+        return instance
 class ChangePasswordSerializer(serializers.Serializer):
     uuid = serializers.UUIDField()
     old_password = serializers.CharField(write_only=True)
@@ -45,3 +57,8 @@ class ResetPasswordSerializer(serializers.Serializer):
         if data['new_password'] != data['confirm_password']:
             raise serializers.ValidationError("New password and confirm password do not match.")
         return data
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)

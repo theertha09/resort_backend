@@ -170,3 +170,27 @@ class ResetPasswordAPIView(APIView):
                 return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class LoginAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get('email')
+
+        try:
+            user = Form.objects.get(email=email)
+            # No password check, no JWT token generation
+            return Response({
+                'status': 'success',
+                'message': 'Login successful.',
+                'user': {
+                    'uuid': user.uuid,
+                    'full_name': user.full_name,
+                    'email': user.email,
+                }
+            })
+
+        except Form.DoesNotExist:
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)

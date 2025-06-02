@@ -26,3 +26,4 @@ class form(models.Model):  # PascalCase naming
 
     def __str__(self):
         return self.full_name
+

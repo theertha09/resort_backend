@@ -4,7 +4,7 @@ from .views import (
     FormRetrieveUpdateDestroyAPIView,
     GoogleAuthView,
     google_page,
-    ResetPasswordAPIView
+    ResetPasswordAPIView,LoginAPIView
 )
 
 urlpatterns = [
@@ -13,4 +13,6 @@ urlpatterns = [
     path('register/<uuid:uuid>/', FormRetrieveUpdateDestroyAPIView.as_view(), name='form-detail'),
     path('reset-password/', ResetPasswordAPIView.as_view(), name='reset-password'),
     path('auth/google/', GoogleAuthView.as_view(), name='google-login'),
+    path('login/', LoginAPIView.as_view(), name='login'),
+
 ]
