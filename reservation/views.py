@@ -1,6 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,13 +5,17 @@ from .models import Reservation
 from .serializers import ReservationSerializer
 from django.shortcuts import get_object_or_404
 
-# POST and GET (all)
+
 class ReservationCreateAPIView(APIView):
+    permission_classes = []
+    authentication_classes = []
+
     def get(self, request):
         reservations = Reservation.objects.all()
         serializer = ReservationSerializer(reservations, many=True)
         return Response({
-            "status": "success",
+            "code": status.HTTP_200_OK,
+            "message": "Success",
             "result": serializer.data
         }, status=status.HTTP_200_OK)
 
@@ -23,15 +24,17 @@ class ReservationCreateAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({
-                "status": "success",
+                "code": status.HTTP_201_CREATED,
+                "message": "Reservation created successfully",
                 "result": [serializer.data]
             }, status=status.HTTP_201_CREATED)
         return Response({
-            "status": "error",
+            "code": status.HTTP_400_BAD_REQUEST,
+            "message": "Validation errors",
             "result": serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
-# GET (by id), PATCH, DELETE
+
 class ReservationDetailAPIView(APIView):
     def get_object(self, pk):
         return get_object_or_404(Reservation, pk=pk)
@@ -40,9 +43,10 @@ class ReservationDetailAPIView(APIView):
         reservation = self.get_object(pk)
         serializer = ReservationSerializer(reservation)
         return Response({
-            "status": "success",
+            "code": status.HTTP_200_OK,
+            "message": "Success",
             "result": [serializer.data]
-        })
+        }, status=status.HTTP_200_OK)
 
     def patch(self, request, pk):
         reservation = self.get_object(pk)
@@ -50,11 +54,13 @@ class ReservationDetailAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response({
-                "status": "success",
+                "code": status.HTTP_200_OK,
+                "message": "Reservation updated successfully",
                 "result": [serializer.data]
-            })
+            }, status=status.HTTP_200_OK)
         return Response({
-            "status": "error",
+            "code": status.HTTP_400_BAD_REQUEST,
+            "message": "Validation errors",
             "result": serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -62,6 +68,7 @@ class ReservationDetailAPIView(APIView):
         reservation = self.get_object(pk)
         reservation.delete()
         return Response({
-            "status": "success",
+            "code": status.HTTP_204_NO_CONTENT,
+            "message": "Reservation deleted successfully",
             "result": [f"Reservation ID {pk} deleted"]
         }, status=status.HTTP_204_NO_CONTENT)
