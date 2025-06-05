@@ -6,6 +6,10 @@ from rest_framework.decorators import api_view, permission_classes
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.conf import settings
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import SubscriptionBenefit
 
 import razorpay
 
@@ -166,3 +170,20 @@ def get_all_payments(request):
         payments = Payment.objects.all().order_by('-created_at')
         serializer = PaymentSerializer(payments, many=True)
         return JsonResponse({"payments": serializer.data}, safe=False)
+@api_view(['DELETE'])
+@permission_classes([AllowAny])  # No auth required
+def delete_benefit(request, subscription_uuid, benefit_id):
+    try:
+        # Verify the subscription exists
+        subscription = SubscriptionPlan.objects.get(uuid=subscription_uuid)
+
+        # Get the benefit under that subscription
+        benefit = SubscriptionBenefit.objects.get(id=benefit_id, plan=subscription)
+        benefit.delete()
+        return Response({'message': 'Benefit deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
+
+    except SubscriptionPlan.DoesNotExist:
+        return Response({'error': 'Subscription not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    except SubscriptionBenefit.DoesNotExist:
+        return Response({'error': 'Benefit not found under this subscription'}, status=status.HTTP_404_NOT_FOUND)

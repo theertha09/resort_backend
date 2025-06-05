@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     SubscriptionPlanCreateView, SubscriptionPlanListView, SubscriptionPlanDetailView,
-    PaymentViewSet, CreateOrderAPIView, VerifyPaymentAPIView
+    PaymentViewSet, CreateOrderAPIView, VerifyPaymentAPIView,delete_benefit
 )
 from . import views  # 🔧 Import views for get_all_payments
 
@@ -16,6 +16,7 @@ urlpatterns = [
     path('create-order/', CreateOrderAPIView.as_view(), name='create-order'),
     path('verify-payment/', VerifyPaymentAPIView.as_view(), name='verify-payment'),
     path('payments/', views.get_all_payments, name='getall-payments'),  # ✅ Fixed
+    path('subscription/<uuid:subscription_uuid>/benefit/<int:benefit_id>/delete/', delete_benefit, name='delete-benefit'),
 
     path('', include(router.urls)),
 ]

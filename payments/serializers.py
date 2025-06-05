@@ -27,26 +27,51 @@ class SubscriptionPlanSerializer(serializers.ModelSerializer):
         
         return subscription_plan
 
-    def update(self, instance, validated_data):
-        # Update the subscription plan fields
+    def create(self, validated_data):
         benefits_data = validated_data.pop('benefits', [])
+        subscription_plan = SubscriptionPlan.objects.create(**validated_data)
+
+        # Avoid duplicate benefits
+        seen_texts = set()
+        for benefit_data in benefits_data:
+            benefit_text = benefit_data.get('benefit_text')
+            if benefit_text and benefit_text not in seen_texts:
+                seen_texts.add(benefit_text)
+                SubscriptionBenefit.objects.create(plan=subscription_plan, benefit_text=benefit_text)
+
+        return subscription_plan
+
+    def update(self, instance, validated_data):
+        benefits_data = validated_data.pop('benefits', [])
+
+        # Update basic fields
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
-        # Update benefits
+        # Track existing and incoming benefits
+        existing_benefits = {b.id: b for b in SubscriptionBenefit.objects.filter(plan=instance)}
+        seen_texts = set()
+
         for benefit_data in benefits_data:
-            benefit_id = benefit_data.get('id', None)
-            if benefit_id:
-                # If benefit ID exists, update existing benefit
-                benefit = SubscriptionBenefit.objects.get(id=benefit_id, plan=instance)
-                benefit.benefit_text = benefit_data['benefit_text']
+            benefit_text = benefit_data.get('benefit_text')
+            benefit_id = benefit_data.get('id')
+
+            if benefit_text in seen_texts:
+                continue  # Skip duplicates in incoming data
+            seen_texts.add(benefit_text)
+
+            if benefit_id and benefit_id in existing_benefits:
+                benefit = existing_benefits[benefit_id]
+                benefit.benefit_text = benefit_text
                 benefit.save()
-            else:
-                # If benefit ID does not exist, create a new benefit
-                SubscriptionBenefit.objects.create(plan=instance, **benefit_data)
-        
+            elif not benefit_id:
+                # Prevent creating duplicate benefit_text
+                if not SubscriptionBenefit.objects.filter(plan=instance, benefit_text=benefit_text).exists():
+                    SubscriptionBenefit.objects.create(plan=instance, benefit_text=benefit_text)
+
         return instance
+
 
 class PaymentSerializer(serializers.ModelSerializer):
     user_uuid = serializers.SerializerMethodField()

@@ -1,0 +1,9 @@
+login
+addresses
+coins
+partner
+product
+properties
+reservation
+pointsform
+payments
